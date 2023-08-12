@@ -55,8 +55,7 @@ public class GuessingGame {
 
         Scene mainScene = createMainScene(mainLayout);
 
-        window.setScene(mainScene);
-        window.show();
+        setSceneAndShow(mainScene);
     }
 
     /**
@@ -131,9 +130,9 @@ public class GuessingGame {
     }
 
     /**
-     * Creates and returns a list of three buttons for the guessing
-     * game scene: "Higher", "Lower", and "Correct". Sets the actions
-     * for each button using the corresponding methods.
+     * Creates and returns a list of three buttons for the guessing game
+     * scene: "Higher", "Lower", and "Correct". Sets the button actions
+     * for each button using the setButtonActions method.
      * 
      * @return a list of three buttons for the guessing game scene
      */
@@ -144,9 +143,7 @@ public class GuessingGame {
 
         List<Node> buttonsList = Arrays.asList(higherButton, lowerButton, correctButton);
 
-        setHigherButtonAction(higherButton);
-        setLowerButtonAction(lowerButton);
-        setCorrectButtonAction(correctButton, buttonsList);
+        setButtonActions(buttonsList);
 
         return buttonsList;
     }
@@ -163,45 +160,34 @@ public class GuessingGame {
     }
 
     /**
-     * Sets the action for the "higher" button in the guessing game.
-     * When the button is clicked, the logic will guess a higher number
-     * and the computer guess label will be updated.
+     * Sets the actions for a list of buttons. If the button text is "Higher",
+     * the guessHigher() method of the logic object is called and the computer
+     * guess label is updated. If the button text is "Lower", the guessLower()
+     * method of the logic object is called and the computer guess label is updated.
+     * If the button text is "Correct", the computer guess label is updated and all
+     * buttons in the list are disabled.
      * 
-     * @param higherButton the button that triggers the action
+     * @param buttonsList the list of buttons to set actions for
      */
-    public void setHigherButtonAction(Button higherButton) {
-        higherButton.setOnAction(event -> {
-            logic.guessHigher();
-            setComputerGuessLabel(false);
-        });
-    }
+    public void setButtonActions(List<Node> buttonsList) {
+        for (Node item : buttonsList) {
+            Button currentButton = (Button) item;
 
-    /**
-     * Sets the action for the lowerButton. When the button is clicked, it calls the
-     * guessLower method of the logic object and updates the computer guess label.
-     *
-     * @param lowerButton the Button object to set the action for
-     */
-    public void setLowerButtonAction(Button lowerButton) {
-        lowerButton.setOnAction(event -> {
-            logic.guessLower();
-            setComputerGuessLabel(false);
-        });
-    }
-
-    /**
-     * Sets the action for the correct button in the guessing game.
-     * When the correct button is clicked, it sets the computer guess label to true
-     * and disables all the buttons in the buttonsList.
-     *
-     * @param correctButton The button that represents the correct answer.
-     * @param buttonsList   The list of all buttons in the guessing game.
-     */
-    public void setCorrectButtonAction(Button correctButton, List<Node> buttonsList) {
-        correctButton.setOnAction(event -> {
-            setComputerGuessLabel(true);
-            disableButtons(buttonsList);
-        });
+            currentButton.setOnAction(event -> {
+                if (currentButton.getText().equals("Higher")) {
+                    logic.guessHigher();
+                    setComputerGuessLabel(false);
+                }
+                else if (currentButton.getText().equals("Lower")) {
+                    logic.guessLower();
+                    setComputerGuessLabel(false);
+                }
+                else if (currentButton.getText().equals("Correct")) {
+                    setComputerGuessLabel(true);
+                    disableButtons(buttonsList);
+                }
+            });
+        }
     }
 
 }
